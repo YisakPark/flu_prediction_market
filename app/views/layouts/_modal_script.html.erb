@@ -1,0 +1,140 @@
+<script>
+  $('#share_modal').on('hide.bs.modal', function (e) {
+    cancel_highlighted();
+  })
+
+  //change highlighted securities to normal securities
+  function cancel_highlighted(){
+    var highlighted = document.getElementsByClassName("highlighted");
+    var length = highlighted.length;
+    while(highlighted.length > 0){
+      highlighted[0].classList.remove("highlighted");
+    }
+  }
+  
+  function show_sell_modal(){
+    //when there is no highlighted security
+    if( document.getElementsByClassName("highlighted").length == 0 ){
+      document.getElementById("modal_alert_sell").setAttribute("class", "");
+      document.getElementById("modal_normal_sell").setAttribute("class", "sr-only"); 
+      $('#share_modal').modal('hide');
+      $('#sell_modal').modal('show');
+      return;
+    }
+    document.getElementById("modal_alert_sell").setAttribute("class", "sr-only");
+    document.getElementById("modal_normal_sell").setAttribute("class", "");  
+    show_table_showing_highlighted("sell");
+    add_hidden_inputs("sell");
+    show_cost_message_sell();
+    $('#share_modal').modal('hide');
+    $('#sell_modal').modal('show');
+  }
+ 
+   //show how much cost user will be paid by selling shares
+  function show_cost_message_sell(){
+    var highlighted_securities = document.getElementsByClassName("highlighted_in_sell_modal");
+    var quantity = parseFloat(document.getElementById("security_order_quantity_sell").value);
+    //check whether the request including highlighted securities and quantity are valid
+    if (highlighted_securities.length == 0 || isNaN(quantity) || quantity <= 0){
+      document.getElementById("cost_information_sell").innerHTML = "";
+      return
+    }
+    //check whether a user has enough shares to sell requested quantity of shares
+    if (!does_user_has_enough_shares(highlighted_securities, quantity)) {
+      document.getElementById("cost_information_sell").classList.add('text-danger');
+      document.getElementById("cost_information_sell").innerHTML = "<span class='glyphicon glyphicon-warning-sign' aria-hidden='true'></span><%= t('.not_enough_share') %>";
+      return
+    }
+    //becuase we will decrease the quantity of shares by selling, we pass quantity with negative sign
+    var cost = get_cost(highlighted_securities, -quantity).toFixed(4);
+    document.getElementById("cost_information_sell").classList.remove('text-danger');
+    document.getElementById("cost_information_sell").classList.add('text-info');
+    document.getElementById("cost_information_sell").innerHTML = "<%= t('.you_will_be_paid') %> $ " + cost; 
+  }
+ 
+  //check user's amount of shares to sell
+  function does_user_has_enough_shares(highlighted_securities, quantity_to_sell) {
+    for( i = 0; i < highlighted_securities.length; i++){
+      var quantity = parseFloat(highlighted_securities[i].getAttribute("data-quantity")); 
+      if(quantity < quantity_to_sell){
+        return false;
+      }
+    }  
+    return true;
+  }
+
+  //show table whose element is highlighted security, modal name will be either 'buy' or 'sell'
+  function show_table_showing_highlighted(modal_name){
+    //get table and initialize
+    var table_showing_highlighted = document.getElementById("table_showing_highlighted_" + modal_name);
+    table_showing_highlighted.innerHTML = "";
+    var highlighted = document.getElementsByClassName("highlighted");
+    //add element to the table
+    for(i = 0; i < highlighted.length; i++){
+      var event = highlighted[i].getAttribute("data-event");
+      var id = highlighted[i].getAttribute("data-id");
+      var quantity = highlighted[i].getAttribute("data-quantity");
+      var cell = document.createElement("td");
+      var text = document.createTextNode(event);
+      cell.appendChild(text);
+      cell.classList.add("highlighted_in_" + modal_name + "_modal");
+      cell.setAttribute("data-id", id);
+      cell.setAttribute("data-quantity", quantity);
+      table_showing_highlighted.appendChild(cell);
+    }
+  }
+
+  //add hidden inputs to the buy or sell form which indicate highlighted security. modal_name is either 'buy' or 'sell'
+  function add_hidden_inputs(modal_name){
+    remove_existing_security_id_input(modal_name);
+    var highlighted = document.getElementsByClassName("highlighted");
+    var order_form = document.getElementById( modal_name + "_order_form");
+    document.getElementById("number_of_security_to_" + modal_name).setAttribute("value", highlighted.length);
+    for(i = 0; i < highlighted.length; i++){
+      var security_id_input = document.createElement("input");
+      var name = "security_order[order_id_" + (i + 1) + "]";
+      security_id_input.setAttribute("type", "hidden");
+      security_id_input.setAttribute("name", name);
+      security_id_input.setAttribute("value", highlighted[i].getAttribute("data-id"));
+      security_id_input.setAttribute("class", modal_name + "_security_id");
+      order_form.appendChild(security_id_input);
+    } 
+  }
+
+  //remove existing hidden input which indicates highlighted security. modal_name will be either 'sell' or 'buy'
+  function remove_existing_security_id_input(modal_name){
+    var security_id_input_list = document.getElementsByClassName(modal_name + "_security_id");
+    var order_form = document.getElementById(modal_name + "_order_form");
+    while( security_id_input_list.length > 0 ){
+      order_form.removeChild(security_id_input_list[0]);
+    }
+  }
+
+/*
+  function get_investment_amount(highlighted_securities = "", quantity = 0 ){
+    var value_inside_log = 0;
+    //securities_quantity_arr gets the current number of quantities of all security. Because it access security whose id=1 first, the quantity of security whose id=x can be found in securities_quantity_arr[x-1]
+    //update quantity of securities according to argument 'quantity'
+    if(highlighted_securities != ""){
+      for( i = 0; i < highlighted_securities.length; i++){
+        var id = parseFloat(highlighted_securities[i].getAttribute("data-id"));
+        securities_quantity_arr[id - 1] +=  quantity;
+      }
+    }
+    for(i = 0; i < securities_quantity_arr.length; i++){
+      value_inside_log += Math.exp(securities_quantity_arr[i] / liquidity_param);
+    }   
+    return liquidity_param * Math.log(value_inside_log);
+  }
+  */
+
+  //calculate the cost to be paid
+  function get_cost(highlighted_securities, quantity){
+    var prior_investment_amount = get_investment_amount();
+    var posterior_investment_amount = get_investment_amount(highlighted_securities, quantity);
+    return Math.abs(posterior_investment_amount - prior_investment_amount);
+  }
+
+ 
+</script>
+

@@ -1,0 +1,57 @@
+en:
+  static_pages:
+    home:
+      jumbotron_text_html: "Welcome to <br/> the Flu Prediction Market"
+
+  layouts: 
+    header:
+      share: 
+        zero: '0 share'
+        one: '1 share'
+        other: '%{count} shares'
+      edit: 'Edit'
+      logout: 'Logout'
+      home: 'Home'
+      faq: 'FAQ'
+      leader_board: 'Leader Board'
+      trade: 'Trade'
+      login: 'Login'
+    footer:
+      contact: 'Contact'
+    share_modal:
+      your_shares: "Your Shares"
+      empty_alert: "You don't have any share!" 
+      security: "Security"
+      current_price: "Current Price"
+      share_quantity: "Share Quantity"
+      sell: "Sell"
+      close: "Close"
+    sell_modal:
+      title: "Sell Shares"
+      empty_alert: "Select the securities first!"
+      you_have_selected: "You have selected"
+      quantity: "Quantity" 
+      submit: "Submit"
+      close: "Close"
+    modal_script:
+      not_enough_share: "You don't have enough shares!"
+      you_will_be_paid: "You will be paid"
+
+  securities:
+    index: 
+      current_price_of_security: "Current Price of Security"
+    price_modal:
+      current_price_of_building: "Current Price of Security in %{building}"
+      buy: "Buy"
+      close: "Close"
+      security: "security"
+      quantity: "quantity"
+    buy_modal:
+      buy_shares: "Buy Shares"
+      empty_alert: "Select the securities first!"
+      you_have_selected: "You have selected"
+      quantity: "Quantity"
+      submit: "Submit"
+      close: "Close"
+    script:
+      you_have_to_pay: "You have to pay"

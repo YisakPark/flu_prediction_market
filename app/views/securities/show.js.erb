@@ -1,0 +1,7 @@
+//load price modal
+$('#<%= @buildling %>_price_modal').remove;
+$('#buy_modal').after("<%= j render('securities/price_modal', securities: @securities, building: @building) %>");
+//load script
+$('#buy_script').remove();
+$('body').after("<%= j render('securities/script', building: @building) %>");
+$('#<%= @building %>_price_modal').modal('show');

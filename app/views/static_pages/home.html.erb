@@ -1,0 +1,13 @@
+<div class="center jumbotron">
+  <h1><%= t('.jumbotron_text_html') %></h1>
+
+  <p>
+    <%= link_to "KOR", root_path(locale: "kor"), class: "" %>
+    |
+    <%= link_to "ENG", root_path(locale: "en"),  class: "" %>
+  </p>
+
+  <% unless user_signed_in? %>
+    <%= link_to "Sign up now!", new_user_registration_path, class: "btn btn-lg btn-primary" %>
+  <% end %>
+</div>

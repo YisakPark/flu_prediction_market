@@ -1,0 +1,75 @@
+<% if user_signed_in? %>
+<%= render 'securities/buy_modal' %>
+<% provide(:title, "Trade") %>
+<div class="row">
+  <div class="col-sm-12">
+    <% @floors.times do |x| %>
+      <div class="col-sm-3 pull-left">
+        <%#show axis information only one time %>
+        <% if x == 0 %>
+          <small>x-axis: date, y-axis: price</small>
+        <% end %>
+      </div>
+      <div class="col-sm-6 text-center">
+          <b>Floor: <%= x+1 %></b>
+      </div>
+      <div class="col-sm-3">
+        <button type="button" class="btn btn-primary pull-right"
+	    data-toggle="modal" data-target="#<%= @building %>_price_modal"
+            onclick="showSecurityTable(<%= @building %>, <%=x+1%>)">
+	  Trade
+        </button>
+      </div>
+      <canvas height="70px" id="<%= @building %>-<%= x+1 %>"></canvas>
+    <% end %>
+  </div>
+</div>
+<script>
+  <% l = 0 %>
+  <% @floors.times do |floor| %>
+    var canvas = document.getElementById("<%= @building %>-<%= floor+1 %>").getContext('2d');
+    var myChart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: [
+        <% (Security.DATE_RANGE).times do |x| %>
+          "<%= x+1 %>",
+        <% end %>
+      ],
+      datasets: [{
+        label: 'Price',
+        data: [
+          <% (Security.DATE_RANGE-1).times do |x| %>
+            "<%= @securities[l].price %>",
+            <% l += 1 %>
+          <% end %>
+          "<%= @securities[l].price %>"
+          <% l += 1 %>
+        ],
+        backgroundColor:
+          'rgba(54, 162, 235, 0.2)',
+        borderColor: 
+          'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      legend: {
+        display: false
+      },
+      title: {
+        display: false,
+        text: "Building: <%= @building %>, floor: <%= floor+1 %>"
+      },
+      onClick: function(e, arr){
+        console.log(arr);
+      },
+      tooltips: {
+        mode: 'point'
+      }
+    }
+  });
+  <% end %>
+</script>
+<%= render('securities/script', building: @building) %>
+<% end %>

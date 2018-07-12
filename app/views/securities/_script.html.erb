@@ -1,0 +1,109 @@
+<script id="buy_script">
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip({
+    container: 'body'
+  });
+
+  $('#security_order_quantity_buy').keyup(function(){
+    show_cost_message_buy();
+  });
+
+  var isMouseDown = false,
+    isHighlighted;
+  $(".security_cell_buy")
+    .mousedown(function () {
+      isMouseDown = true;
+      $(this).toggleClass("highlighted");
+      isHighlighted = $(this).hasClass("highlighted");
+      return false; // prevent text selection
+    })
+    .mouseover(function () {
+      if (isMouseDown) {
+        $(this).toggleClass("highlighted", isHighlighted);
+      }
+    });
+  $(document)
+    .mouseup(function () {
+      isMouseDown = false;
+    });
+});
+
+  $('.price_modal').on('hide.bs.modal', function (e) {
+    cancel_highlighted();
+  })
+  
+  //hide all floors' security table but 'floor' security table
+  function showSecurityTable(building, floor){
+    //hide all floors' security table
+    $("."+building).addClass("sr-only");
+    //show selected floor's security table
+    $("#security_modal_"+building+"_"+floor).toggleClass("sr-only");
+    //change modal header floor information
+    $("#modal_header_floor").text(floor);
+  }
+
+  function show_buy_modal(building){
+    //when there is no highlighted security
+    if( document.getElementsByClassName("highlighted").length == 0 ){ 
+      show_alert();
+      $('#' + building + '_price_modal').modal('hide');
+      $('#buy_modal').modal('show');
+      return;
+    }
+    document.getElementById("modal_alert_buy").setAttribute("class", "sr-only");
+    document.getElementById("modal_normal_buy").setAttribute("class", "");
+    show_table_showing_highlighted("buy");
+    add_hidden_inputs("buy");
+    show_cost_message_buy();
+    $('#' + building + '_price_modal').modal('hide');
+    $('#buy_modal').modal('show');
+  }
+
+  //show price distribution of 'building'
+  function show_price(building){
+    var buildings = ["EB1", "EB2", "EB3", "NB", "EB4", "EB5"];
+    for( i = 0; i < buildings.length; i++){
+      if(building != buildings[i]){
+        var elements_arr = document.getElementsByClassName(buildings[i]);
+        for(j = 0; j < elements_arr.length; j++){
+          elements_arr[j].classList.add("sr-only");
+        }
+      } 
+      else{
+        var elements_arr = document.getElementsByClassName(buildings[i]);
+        for(j = 0; j < elements_arr.length; j++){
+          elements_arr[j].classList.remove("sr-only");
+        }
+      }
+    }
+  }
+
+  //show how much cost user pay to buy the shares
+  function show_cost_message_buy(){
+    var highlighted_securities = document.getElementsByClassName("highlighted_in_buy_modal");
+    var quantity = parseFloat(document.getElementById("security_order_quantity_buy").value);
+    //check whether the request including highlighted securities and quantity are valid
+    if (highlighted_securities.length == 0 || isNaN(quantity) || quantity <= 0){
+      document.getElementById("cost_information_buy").innerHTML = "";
+      return
+    }
+    var cost = get_cost(highlighted_securities, quantity).toFixed(4);
+    var user_money = parseFloat(<%= current_user.money %>);
+    if (user_money < cost){
+      document.getElementById("cost_information_buy").classList.add('text-danger');
+      document.getElementById("cost_information_buy").innerHTML = "<span class='glyphicon glyphicon-warning-sign' aria-hidden='true'></span><%= t('.you_have_to_pay') %> $" + cost;
+    }
+    else{
+      document.getElementById("cost_information_buy").classList.remove('text-danger');
+      document.getElementById("cost_information_buy").classList.add('text-info');
+      document.getElementById("cost_information_buy").innerHTML = "<%= t('.you_have_to_pay') %> $" + cost; 
+    }
+  }
+
+  function show_alert(){
+    document.getElementById("modal_alert_buy").setAttribute("class", "");
+    document.getElementById("modal_normal_buy").setAttribute("class", "sr-only");
+  }
+  
+</script>

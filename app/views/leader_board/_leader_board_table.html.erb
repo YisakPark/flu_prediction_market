@@ -1,0 +1,24 @@
+<div class="row">
+<div class="col-sm-6 col-sm-offset-3">
+  <div class="table-responsive">
+    <table class="table">
+      <%-# table header -%>
+      <tr>
+        <th></th>
+        <th class="text-center">email</th>
+        <th class="text-center">asset</th>
+      </tr> 
+      <% i = 1 %>
+      <%-# iterate through user array sort by asset -%>
+      <% @user_arr_sort_by_asset.each do |elem| %>
+        <tr>
+          <td><%= i %></td>
+          <td class="text-center"><%= User.find(elem[:id]).email %></td>
+          <td class="text-center"><%= elem[:asset] %></td>
+        </tr>
+        <% i += 1 %>
+      <% end %>
+    </table>
+  </div>
+</div>
+</div>

@@ -1,0 +1,6 @@
+<p>You currently have $ <%= @user_money %> and those are shares of security you have</p>
+<ul>
+  <% @user_securities.each do |security|%>
+    <li><%= Security.find(security.security_id).event %>, <%= security.quantity %></li>
+  <% end %>
+</ul>

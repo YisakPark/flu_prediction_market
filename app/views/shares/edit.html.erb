@@ -1,0 +1,21 @@
+<% provide(:title, "Trade") %>
+
+<p>
+  You currently have <%= @user.money %>$ and <%= @user.share_quantity %> shares.
+</p>
+<p>
+  <%= @share.quantity %> shares are available with sell price: <%= @share.sell_price %>$ and buy price: <%= @share.buy_price %>$.
+</p>
+<%= form_for(:share_trade, url: sharetrade_path) do |f| %>
+
+  <%= f.radio_button :trade_mode, 'sell', checked: true %>   
+  <%= label :sell, 'Sell' %>
+  <%= f.radio_button :trade_mode, 'buy'%>   
+  <%= label :buy, 'Buy' %>
+  
+  <span>&nbsp</span>
+  <%= f.label :quantity %>
+  <%= f.number_field :quantity, min: 1 %>
+
+  <%= f.submit "Complete" %>
+<% end %>

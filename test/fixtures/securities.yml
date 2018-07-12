@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  group: MyString
+  events: MyString
+  string: MyString
+  price: 9.99
+
+two:
+  group: MyString
+  events: MyString
+  string: MyString
+  price: 9.99

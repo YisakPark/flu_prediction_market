@@ -1,0 +1,34 @@
+<%= render 'layouts/imageMapResizer' %>
+<script>
+$(document).ready(function() {
+    $('map').imageMapResize();
+});
+
+
+
+$(function () {
+  $('#security_order_quantity_sell').keyup(function(){
+    show_cost_message_sell();
+  });
+
+  var isMouseDown = false,
+    isHighlighted;
+  $(".security_cell_sell")
+    .mousedown(function () {
+      isMouseDown = true;
+      $(this).toggleClass("highlighted");
+      isHighlighted = $(this).hasClass("highlighted");
+      return false; // prevent text selection
+    })
+    .mouseover(function () {
+      if (isMouseDown) {
+        $(this).toggleClass("highlighted", isHighlighted);
+      }
+    });
+
+  $(document)
+    .mouseup(function () {
+      isMouseDown = false;
+    });
+});
+</script>

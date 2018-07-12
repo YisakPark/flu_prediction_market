@@ -1,0 +1,14 @@
+<!-- delete all title and just name is prediction market -->
+<%= form_for(:setting, url: sharesetting_path) do |f| %>
+
+  <%= f.label :sell_price %>
+  <%= f.text_field :sell_price %>
+
+  <%= f.label :buy_price %>
+  <%= f.text_field :buy_price %>
+
+  <%= f.label :quantity %>
+  <%= f.number_field :quantity, min: 1 %>
+  
+  <%= f.submit "Complete" %>
+<% end %>

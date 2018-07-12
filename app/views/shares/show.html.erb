@@ -1,0 +1,16 @@
+<% provide(:title, "Trade") %>
+<p>
+  You currently have <%= @user.money %>$ and <%= @user.share_quantity %> shares.
+</p>
+<% if @share && @share.quantity > 0 %>
+  <p>
+    <%= @share.quantity %> shares are available with sell price: <%= @share.sell_price %>$ and buy price: <%= @share.buy_price %>$.
+    <br />
+    <%= link_to "Trade", sharetrade_path %>
+  </p>
+<% else %> 
+  <p>
+    There is no share on the market.
+  </p>
+<% end %>
+<%= link_to "Set Share", sharesetting_path if @user.admin %>

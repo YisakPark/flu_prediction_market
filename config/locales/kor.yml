@@ -1,0 +1,55 @@
+kor:
+  static_pages:
+    home:
+      jumbotron_text_html: "독감발생 예측시장에<br/> 오신 것을 환영합니다!"
+
+  layouts:
+    header:
+      share: '%{count} 주'
+      edit: '개인정보변경'
+      logout: '로그아웃'
+      home: '홈'
+      faq: 'FAQ'
+      leader_board: '리더보드'
+      trade: '거래'
+      login: '로그인'
+    footer:
+      contact: '연락처'
+    share_modal:
+      your_shares: "보유 중인 주"
+      empty_alert: "현재 보유 중인 주가 없습니다!"
+      security: "종목명"
+      current_price: "현재가"
+      share_quantity: "보유량"
+      sell: "판매"
+      close: "닫기"
+    sell_modal:
+      title: "보유 주 판매"
+      empty_alert: "종목을 먼저 선택하세요!"
+      you_have_selected: "선택한 종목"
+      quantity: "판매량"
+      submit: "완료"
+      close: "닫기"
+    modal_script:
+      not_enough_share: "보유량이 부족합니다!"
+      you_will_be_paid: "지불 받으실 금액입니다."
+
+  securities:
+    index: 
+      current_price_of_security: "종목 가격분포표"
+    price_modal:
+      current_price_of_building: "%{building} 종목 가격 분포표"
+      buy: "구매"
+      close: "닫기"
+      security: "종목명"
+      quantity: "거래량"
+    buy_modal:
+      buy_shares: "주 구매"
+      empty_alert: "종목을 먼저 선택하세요!"
+      you_have_selected: "선택한 종목"
+      quantity: "구매량"
+      submit: "완료"
+      close: "닫기"
+    script:
+      you_have_to_pay: "지불하실 금액입니다."
+

@@ -1,0 +1,17 @@
+<div class="row">
+  <%= image_tag("UNIST_Map_2_edited", class: "img-responsive col-sm-10 col-sm-offset-1", usemap: "#image-map", id: "unist_map") %>
+  <map name="image-map">
+    <%#= 102-EB1, 104-EB2, 106-EB3, 108-NB, 110-EB4, 112-EB5  404-Faculty up
+         403-Faculty down 114-administration 101-dormitory%>
+    <area coords="481,1321,525,1339,490,1489,439,1472" shape="poly" href="<%= show_price_path %>?building=112" target="_blank">
+    <area coords="613,1333,661,1325,683,1482,630,1481" shape="poly" href="<%= show_price_path %>?building=110" target="_blank">
+    <area coords="745,1310,784,1284,849,1424,808,1454" shape="poly" href="<%= show_price_path %>?building=108" target="_blank">
+    <area coords="842,1228,875,1204,969,1349,924,1384" shape="poly" href="<%= show_price_path %>?building=106" target="_blank">
+    <area coords="926,1157,959,1119,1094,1228,1048,1277" shape="poly" href="<%= show_price_path %>?building=104" target="_blank">
+    <area coords="1015,1085,1020,1039,1175,1091,1149,1171,1051,1152" shape="poly" href="<%= show_price_path %>?building=102" target="_blank">
+    <area coords="139,1135,238,1103,253,1147,153,1179" shape="poly"href="<%= show_price_path %>?building=404" target="_blank">
+    <area coords="152,1297,238,1243,260,1274,175,1338" shape="poly"href="<%= show_price_path %>?building=403" target="_blank">
+    <area coords="629,668,771,582,652,489,608,515" shape="poly"href="<%= show_price_path %>?building=114" target="_blank">
+    <area coords="414,160,554,81,613,221,548,244" shape="poly"href="<%= show_price_path %>?building=101" target="_blank">
+  </map>
+</div>
