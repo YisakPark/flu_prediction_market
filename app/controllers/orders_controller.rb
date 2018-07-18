@@ -8,6 +8,10 @@ class OrdersController < ApplicationController
      redirect_to request.referrer and return
   end
 
+  def get_cost
+     render 'securities/get_cost'
+  end
+
 
   private
 

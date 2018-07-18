@@ -7,6 +7,7 @@ scope "(:locale)", locale: /en|kor/ do
   get  '/security',   to: 'securities#index'
   get  '/show_security',    to: 'securities#show'
   post '/create_order', to: 'orders#create'
+  post '/get_cost', to: 'orders#get_cost'
   get  '/faq',         to: 'static_pages#faq'
   get  '/show_price',         to: 'securities#show'
   get  '/show_price',         to: 'securities#show'

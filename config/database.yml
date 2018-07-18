@@ -87,4 +87,4 @@ production:
   <<: *default
   database: flu_prediction_production
   username: flu_prediction
-  password: <%= ENV['FLU_PREDICTION_DATABASE_PASSWORD'] %>
+  password: flu_prediction

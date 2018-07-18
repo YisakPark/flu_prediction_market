@@ -33,7 +33,7 @@ gem 'sinatra', '~> 2.0.0'
 gem 'slim', '~> 3.0.9'
 gem 'net-ssh', '5.0.2'
 gem 'bootsnap', '>= 1.1.0', require: false
-gem 'passenger', '>= 5.0.25', require: 'phusion_passenger/rack_handler'
+#gem 'passenger', '>= 5.0.25', require: 'phusion_passenger/rack_handler'
 
 # Use Capistrano for deployment
 gem 'capistrano-rails', group: :development
