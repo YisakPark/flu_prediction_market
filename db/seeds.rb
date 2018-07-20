@@ -19,78 +19,64 @@ user2 = User.create!(
 )
 
 Building.create!(
-      :number              => "102",
-      :floors                => 8,
+      :building_num              => 102,
       :name                  => "Engineering Building I"
 )
 
 Building.create!(
-      :number              => "104",
-      :floors                => 8,
+      :building_num              => 104,
       :name                  => "Engineering Building II"
 )
 
 Building.create!(
-      :number              => "106",
-      :floors                => 8,
+      :building_num              => 106,
       :name                  => "Engineering Building III"
 )
 
 Building.create!(
-      :number              => "108",
-      :floors                => 8,
+      :building_num              => 108,
       :name                  => "Natural Science Building"
 )
 
 Building.create!(
-      :number              => "110",
-      :floors                => 8,
+      :building_num              => 110,
       :name                  => "Engineering building IV"
 )
 
 Building.create!(
-      :number              => "112",
-      :floors                => 8,
+      :building_num              => 112,
       :name                  => "Engineering building V"
 )
 
 Building.create!(
-      :number              => "403",
-      :floors                => 8,
+      :building_num              => "403",
       :name                  => "Faculty Residence"
 )
 
 Building.create!(
-      :number              => "404",
-      :floors                => 8,
+      :building_num              => 404,
       :name                  => "Faculty Residence"
 )
 
 Building.create!(
-      :number              => "114",
-      :floors                => 8,
+      :building_num              => 114,
       :name                  => "Business Administration Building"
 )
 
 Building.create!(
-      :number              => "101",
-      :floors                => 8,
+      :building_num              => 101,
       :name                  => "Dormitory"
 )
 
-Building.all.each do |building|
-  building.floors.times do |floor|
-    Security.DATE_RANGE.times do |date|
-      Security.create!(
-        building_number: building.number,
-        event: "#{building.number}-#{floor+1},#{date+1}",
-        price: 0,
-        quantity: 0
-      )
-      puts "#{building.number}-#{floor+1},#{date+1}"
-    end
+7.times do |i|
+  Building.all.each do |building|
+    SecurityGroup.create!(
+      	    date_market: (Time.now + i.days).strftime("%m/%d/%Y"),
+	    building_num: building.building_num,
+	    shares: 0)
   end
 end
+
 
 #
 #order1 = Order.create!(user_id: user2.id,

@@ -1,7 +1,8 @@
-class LineSecurity < ApplicationRecord
+class LineShare < ApplicationRecord
   belongs_to :user
-  belongs_to :security
-  validates :quantity, presence: true, numericality: { greater_than_or_equal_to: 0, less_than: 10000000 }
+  validates :quantity, numericality: { greater_than_or_equal_to: 0, only_integer: true}
+  validates :building_num, numericality: {only_integer: true}
+  validates :flu_population_rate, numericality: {greater_than_or_equal_to: 0, less_than_or_equal_to: 1}
   default_scope -> { order(quantity: :desc) }
 
   public
@@ -17,8 +18,8 @@ class LineSecurity < ApplicationRecord
     end
 
   private
-    #update corresponding security quantity with the amount that line_security quantity has changed and remove other equivalent line security which has same user_id and security_id
-    def update_security_quantity_and_remove_other_equivalent_line_security
+    #update corresponding security quantity with the amount that line_share quantity has changed and remove other equivalent line_share
+    def update_security_quantity_and_remove_other_equivalent_line_share
       #somehow Security.find(self.security_id).assign_attributes doesn't work, so that I use different way to assign attributes.
       security = Security.find(self.security_id)
       security.assign_attributes(quantity: security.quantity + self.quantity)

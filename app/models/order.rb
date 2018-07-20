@@ -1,7 +1,7 @@
 class Order < ApplicationRecord
   after_save :update_cost
   belongs_to :user
-  validates :quantity, presence: true, numericality: { greater_than: 0, less_than: 10000000 }
+  validates :quantity, numericality: { greater_than: 0 }
   validates :cost, numericality: { greater_than: 0, less_than: 10000000 }, allow_nil: true
   validates :order_type, presence: true
 
@@ -9,7 +9,7 @@ class Order < ApplicationRecord
     #process the order. It could be buy or sell
     def process
       #get cost of order
-      cost = Security.get_cost(self.security_ids, self.quantity)
+      cost = Security.get_cost(self.building_nums, self.quantity)
       if self.order_type == "buy"
         return false unless buy_process cost
         self.update_attributes(isDone: true)

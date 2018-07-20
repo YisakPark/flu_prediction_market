@@ -10,52 +10,50 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_18_112538) do
+ActiveRecord::Schema.define(version: 2018_07_19_110534) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "buildings", force: :cascade do |t|
-    t.string "number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
-    t.integer "shares"
+    t.integer "building_num"
   end
 
   create_table "line_shares", force: :cascade do |t|
-    t.decimal "quantity", precision: 10, scale: 4
     t.decimal "price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
-    t.string "building"
     t.decimal "flu_population_rate", precision: 5, scale: 4
-    t.index ["user_id"], name: "index_line_shares_on_user_id"
-  end
-
-  create_table "market_status", force: :cascade do |t|
+    t.integer "building_num"
+    t.integer "quantity"
+    t.boolean "available", default: true
     t.string "date_market"
-    t.string "building"
-    t.decimal "flu_population_rate", precision: 5, scale: 4
+    t.integer "security_group_id"
+    t.index ["user_id"], name: "index_line_shares_on_user_id"
   end
 
   create_table "orders", force: :cascade do |t|
     t.bigint "user_id"
     t.boolean "isDone", default: false
-    t.decimal "quantity", precision: 10, scale: 4
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "order_type"
     t.decimal "cost", precision: 10, scale: 4
     t.string "date_market"
-    t.string "building"
+    t.integer "quantity"
+    t.integer "building_nums", array: true
+    t.integer "security_group_ids", array: true
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
   create_table "past_prices", force: :cascade do |t|
-    t.string "building"
     t.string "date_market"
+    t.integer "building_num"
+    t.integer "security_group_id"
   end
 
   create_table "queue_classic_jobs", force: :cascade do |t|
@@ -68,6 +66,13 @@ ActiveRecord::Schema.define(version: 2018_07_18_112538) do
     t.datetime "scheduled_at", default: -> { "now()" }
     t.index ["q_name", "id"], name: "idx_qc_on_name_only_unlocked", where: "(locked_at IS NULL)"
     t.index ["scheduled_at", "id"], name: "idx_qc_on_scheduled_at_only_unlocked", where: "(locked_at IS NULL)"
+  end
+
+  create_table "security_groups", force: :cascade do |t|
+    t.string "date_market"
+    t.integer "building_num"
+    t.integer "shares"
+    t.boolean "isClosed?", default: false
   end
 
   create_table "shares", force: :cascade do |t|
