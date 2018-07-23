@@ -11,3 +11,40 @@
     <%= link_to "Sign up now!", new_user_registration_path, class: "btn btn-lg btn-primary" %>
   <% end %>
 </div>
+
+<div class="rule_of_game">
+  <h1>Rules of Game</h1>
+  <p>Contents</p>
+</div>
+
+<% if user_signed_in? %>
+  <div class="your_share">
+    <h1>Your Shares</h1>
+    <% if LineShare.where(user_id: current_user.id, available: true).count == 0 %>
+      <p class="text-danger"><%= t('.empty_alert') %></p>
+    <% else %>
+      <div class="table-responsive">
+        <table class="table">
+          <tr>
+            <th class="text-center"><small><%= t('.date_market') %></small></th>
+            <th class="text-center"><small><%= t('.building_name') %></small></th>
+            <th class="text-center"><small><%= t('.flu_population_rate') %></small></th>
+            <th class="text-center"><small><%= t('.current_price') %></small></th>
+            <th class="text-center"><small><%= t('.share_quantity') %></small></th>
+          </tr>
+  
+          <% LineShare.where(user_id: current_user.id, available: true).each do |lineshare| %>
+            <% sec = SecurityGroup.find(lineshare.security_group_id) %>
+            <tr>
+              <td class="text-center"><%= lineshare.date_market %></td>
+              <td class="text-center"><%= Building.find_by(building_num: lineshare.building_num).name %></td>
+              <td class="text-center"><%= lineshare.flu_population_rate %></td>
+              <td class="text-center price_cell_in_share_modal <%#= Security.get_price_change_rate(sec.price, sec.past_price) %>"><%= sec.price %></td>
+              <td class="text-center"><%= lineshare.quantity %></td>
+            </tr>
+          <% end %>
+        </table>
+      </div>
+    <% end %>
+  </div>
+<% end %>

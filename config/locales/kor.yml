@@ -2,6 +2,13 @@ kor:
   static_pages:
     home:
       jumbotron_text_html: "독감발생 예측시장에<br/> 오신 것을 환영합니다!"
+      your_shares: "보유 중인 주"
+      empty_alert: "현재 보유 중인 주가 없습니다!"
+      date_market: "예측시장날짜"
+      building_name: "건물명"
+      flu_population_rate: "독감인구비율"
+      current_price: "현재가"
+      share_quantity: "보유량"
 
   layouts:
     header:
@@ -18,7 +25,9 @@ kor:
     share_modal:
       your_shares: "보유 중인 주"
       empty_alert: "현재 보유 중인 주가 없습니다!"
-      security: "종목명"
+      date_market: "예측시장날짜"
+      building_name: "건물명"
+      flu_population_rate: "독감인구비율"
       current_price: "현재가"
       share_quantity: "보유량"
       sell: "판매"

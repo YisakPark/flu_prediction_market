@@ -14,8 +14,8 @@ class User < ApplicationRecord
   #get quantity of shares that user bought
   def get_shares_quantity
     quantity = 0
-    LineSecurity.where(user_id: self.id).each do |linesecurity|
-      quantity += linesecurity.quantity
+    LineShare.where(user_id: self.id, available: true).each do |lineshare|
+      quantity += lineshare.quantity
     end  
     quantity
   end
@@ -35,8 +35,8 @@ class User < ApplicationRecord
     asset = self.money
     sell_hash = {}
     #make has whose key is id of security and value is quantity that user bought
-    LineSecurity.where(user_id: self.id).each do |linesecurity|
-      key = linesecurity.security_id.to_s.to_sym
+    LineShare.where(user_id: self.id, available: true).each do |lineshare|
+      key = lineshare.security_id.to_s.to_sym
       #because this is the hash for selling, qunatity will be negative
       value = - linesecurity.quantity
       sell_hash[key] = value

@@ -2,6 +2,13 @@ en:
   static_pages:
     home:
       jumbotron_text_html: "Welcome to <br/> the Flu Prediction Market"
+      your_shares: "Your Shares"
+      empty_alert: "You don't have any share!" 
+      date_market: "Date of Market"
+      building_name: "Builing Name"
+      flu_population_rate: "Flu Population Rate"
+      current_price: "Current Price"
+      share_quantity: "Share Quantity"
 
   layouts: 
     header:
@@ -21,7 +28,9 @@ en:
     share_modal:
       your_shares: "Your Shares"
       empty_alert: "You don't have any share!" 
-      security: "Security"
+      date_market: "Date of Market"
+      building_name: "Builing Name"
+      flu_population_rate: "Flu Population Rate"
       current_price: "Current Price"
       share_quantity: "Share Quantity"
       sell: "Sell"

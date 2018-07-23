@@ -3,7 +3,7 @@ class SecuritiesController < ApplicationController
 
   def index
     @user_money = current_user.money
-    @user_securities = LineSecurity.where(["user_id = ?", current_user.id])
+    @user_securities = LineShare.where(user_id: current_user.id, available: true)
     @security
   end
 

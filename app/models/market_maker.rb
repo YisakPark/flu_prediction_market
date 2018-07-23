@@ -62,4 +62,22 @@ class MarketMaker < ApplicationRecord
   def self.LIQUIDITY_PARAM
     32.0
   end
+
+  #update price of the market specified by 'date_market'
+  def self.update_price date_market
+    denominator = 0
+    numerator = 0
+
+    #get denominator 
+    SecurityGroup.where(date_market: date_market).each do |security_group|
+      denominator += Math.exp(security_group.shares / MarketMaker.LIQUIDITY_PARAM)
+    end
+
+    #get numerator for each security_group
+    SecurityGroup.where(date_market: date_market).each do |security_group|
+      numerator = Math.exp(security_group.shares / MarketMaker.LIQUIDITY_PARAM)
+      security_group.update_columns(price: numerator / denominator)
+      numerator = 0      
+    end
+  end
 end

@@ -1,28 +1,32 @@
 <% if user_signed_in? %>
 <div class="modal fade" id="share_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-sm" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel"><%= t('.your_shares') %></h4>
       </div>
       <div class="modal-body">
-        <% if LineSecurity.where(user_id: current_user.id).count == 0 %>
+        <% if LineShare.where(user_id: current_user.id, available: true).count == 0 %>
           <p class="text-danger"><%= t('.empty_alert') %></p>
         <% else %>
           <div class="table-responsive">
             <table class="table">
               <tr>
-                <th class="text-center"><small><%= t('.security') %></small></th>
+                <th class="text-center"><small><%= t('.date_market') %></small></th>
+                <th class="text-center"><small><%= t('.building_name') %></small></th>
+                <th class="text-center"><small><%= t('.flu_population_rate') %></small></th>
                 <th class="text-center"><small><%= t('.current_price') %></small></th>
                 <th class="text-center"><small><%= t('.share_quantity') %></small></th>
               </tr>
-              <% LineSecurity.where(user_id: current_user.id).each do |linesecurity| %>
-              <% sec = Security.find(linesecurity.security_id) %>
+              <% LineShare.where(user_id: current_user.id, available: true).each do |lineshare| %>
+              <% sec = SecurityGroup.find(lineshare.security_group_id) %>
                 <tr>
-                  <td class="text-center security_cell_sell" data-id="<%= sec.id %>" data-event="<%= sec.event %>" data-quantity="<%= sec.quantity %>"><%= sec.event %></td>
-                  <td class="text-center price_cell_in_share_modal <%= Security.get_price_change_rate(sec.price, sec.past_price) %>"><%= sec.price %></td>
-                  <td class="text-center"><%= linesecurity.quantity %></td>
+                  <td class="text-center"><%= lineshare.date_market %></td>
+                  <td class="text-center"><%= Building.find_by(building_num: lineshare.building_num).name %></td>
+                  <td class="text-center"><%= lineshare.flu_population_rate %></td>
+                  <td class="text-center price_cell_in_share_modal <%#= Security.get_price_change_rate(sec.price, sec.past_price) %>"><%= sec.price %></td>
+                  <td class="text-center"><%= lineshare.quantity %></td>
                 </tr>
               <% end %>
             </table>
@@ -30,7 +34,7 @@
         <% end %>
       </div>
       <div class="modal-footer">
-        <% if LineSecurity.where(user_id: current_user.id).count > 0 %>
+        <% if LineShare.where(user_id: current_user.id, available: true).count > 0 %>
           <button type="button" class="btn btn-primary" onclick="show_sell_modal()"><%= t('.sell') %></button>
         <% end %>
         <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('.close') %></button>

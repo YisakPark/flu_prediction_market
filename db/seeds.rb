@@ -75,6 +75,7 @@ Building.create!(
 	    building_num: building.building_num,
 	    shares: 0)
   end
+  MarketMaker.update_price (Time.now + i.days).strftime("%m/%d/%Y")
 end
 
 

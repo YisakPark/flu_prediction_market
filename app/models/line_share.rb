@@ -1,4 +1,5 @@
 class LineShare < ApplicationRecord
+  after_save :update_lineshare_quantity_and_remove_other_equivalent_line_share
   belongs_to :user
   validates :quantity, numericality: { greater_than_or_equal_to: 0, only_integer: true}
   validates :building_num, numericality: {only_integer: true}
@@ -19,16 +20,16 @@ class LineShare < ApplicationRecord
 
   private
     #update corresponding security quantity with the amount that line_share quantity has changed and remove other equivalent line_share
-    def update_security_quantity_and_remove_other_equivalent_line_share
-      #somehow Security.find(self.security_id).assign_attributes doesn't work, so that I use different way to assign attributes.
-      security = Security.find(self.security_id)
-      security.assign_attributes(quantity: security.quantity + self.quantity)
-      raise InvalidSecurityQuantity unless security.save_with_validation?
-      #remove another equivalent line security
-      equivalent_line_security = LineSecurity.find_by("user_id = '#{self.user_id}' AND security_id = '#{self.security_id}' AND id != '#{self.id}'")
-      if(equivalent_line_security)
-        self.update_columns(quantity: self.quantity + equivalent_line_security.quantity)
-        equivalent_line_security.destroy
+    def update_lineshare_quantity_and_remove_other_equivalent_line_share
+      equivalent_line_share = LineShare.find_by(
+          "user_id = '#{self.user_id}' " +
+          "AND security_group_id = '#{self.security_group_id}' " +
+          "AND flu_population_rate = '#{self.flu_population_rate}' " + 
+          "AND available = true " + 
+          "AND id != '#{self.id}'")
+      if(equivalent_line_share)
+        self.update_columns(quantity: self.quantity + equivalent_line_share.quantity)
+        equivalent_line_share.destroy
       end
     end
  
