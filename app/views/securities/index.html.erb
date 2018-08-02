@@ -1,4 +1,5 @@
 <% if user_signed_in? %>
+<%= render 'securities/trade_modal' %>
 <%= render 'securities/building_links' %>
 <% provide(:title, "Trade") %>
 <div class="row">
@@ -16,4 +17,5 @@
     </div>
   </div>
 </div>
+<%= render 'securities/script' %>
 <% end %>

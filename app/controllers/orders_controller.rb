@@ -9,7 +9,10 @@ class OrdersController < ApplicationController
   end
 
   def get_cost
-     render 'securities/get_cost'
+    security_group_id = params.permit(:security_group_id)[:security_group_id].to_i
+    quantity = params.permit(:quantity)[:quantity].to_i
+    @cost = MarketMaker.get_cost [security_group_id], quantity
+    render 'securities/get_cost'
   end
 
 

@@ -2,7 +2,8 @@ class MarketMaker < ApplicationRecord
 
   #get cost to buy(or sell) the share of security with the amount of passed quantity. quantity will be positive if buy and negative if sell.
   #'date_market' is the date of market, 'security_group_ids' is the array of security_group_id, 'quanaitiy' is the quantity of shares to be bought
-  def self.get_cost(date_market, security_group_ids, quantity)
+  def self.get_cost(security_group_ids, quantity)
+    date_market = MarketMaker.get_date_market security_group_ids.first
     prior_investment_amount = MarketMaker.get_investment_amount(date_market)
     posterior_investment_amount = MarketMaker.get_investment_amount(date_market, security_group_ids, quantity)
     return (posterior_investment_amount - prior_investment_amount).abs
@@ -79,5 +80,13 @@ class MarketMaker < ApplicationRecord
       security_group.update_columns(price: numerator / denominator)
       numerator = 0      
     end
+  end
+
+  def self.get_date_market security_group_id
+    SecurityGroup.find(security_group_id).date_market
+  end
+
+  def self.get_security_group_id date_market, building_num
+    SecurityGroup.find_by(date_market: date_market, building_num: building_num).id
   end
 end

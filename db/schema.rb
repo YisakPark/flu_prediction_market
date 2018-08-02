@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_20_071042) do
+ActiveRecord::Schema.define(version: 2018_07_24_044417) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,9 @@ ActiveRecord::Schema.define(version: 2018_07_20_071042) do
     t.string "date_market"
     t.integer "building_num"
     t.integer "security_group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.decimal "past_price", precision: 5, scale: 4
   end
 
   create_table "queue_classic_jobs", force: :cascade do |t|
@@ -75,6 +78,8 @@ ActiveRecord::Schema.define(version: 2018_07_20_071042) do
     t.integer "shares"
     t.boolean "isClosed?", default: false
     t.decimal "price", precision: 5, scale: 4
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "shares", force: :cascade do |t|

@@ -1,0 +1,41 @@
+<% if user_signed_in? %>
+<div class="modal fade" id="trade_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Trade Shares</h4>
+      </div>
+
+      <div class="modal-body">
+	<%#= hidden form to send the quantity of shares to the controller %>
+	<%= form_with url: get_cost_path, html: {id: "get_cost_form"} do |f| %>
+       	  <%= f.hidden_field :security_group_id, id: "cost_security_group_id" %>
+	  <%= f.hidden_field :quantity, id: "cost_quantity" %>
+	<% end %>
+
+	<%= form_for(:security_order, url: create_order_path ) do |f| %>
+          <div class="form-group">
+	     <%= f.label :flu_population_rate, "Flu population rate", class: "control-label" %>
+	     <%= f.range_field :flu_population_rate_range, id:"myRange", min:0, max:100, step:0.001, value:0.5, class:"form-control" %>
+	     <%#= check positive number %>
+	     <%= f.number_field :flu_population_rate, id:"number", min:0, max:100, step:0.001, value:0.5, class:"form-control" %>
+
+	     <%= f.label :quantity, "Quantity", class: "control-label" %>
+	     <%#= check positive and integer %>
+	     <%= f.number_field :quantity, min:0, step:1, value:0, class:"form-control", id: "order_quantity_buy" %>
+	  </div>
+
+	  <div id="cost_info"></div>
+
+	  <%= f.submit "Submit", class:"btn btn-default" %>
+	<% end %>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="cancel_highlighted()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>

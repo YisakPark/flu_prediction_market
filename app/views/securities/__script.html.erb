@@ -1,20 +1,12 @@
 <script id="buy_script">
 
 $(function () {
-
-  // Update the current slider value (each time you drag the slider handle)
-  $('#myRange').on('input', function() {
-    $('#number').val(this.value);
-  });
-
-
   $('[data-toggle="tooltip"]').tooltip({
     container: 'body'
   });
 
-  $('#order_quantity_buy').keyup(function(){
-    $('#cost_quantity').val(this.value);
-    $('#get_cost_form').submit();
+  $('#security_order_quantity_buy').keyup(function(){
+    show_cost_message_buy();
   });
 
   $('#hello_button').click(function(){
@@ -44,12 +36,7 @@ $(function () {
   $('.price_modal').on('hide.bs.modal', function (e) {
     cancel_highlighted();
   })
-
-  function showTradeModal(security_group_id){
-    $('#cost_security_group_id').val(security_group_id);
-    $('#trade_modal').modal('show');
-  }
-
+  
   //hide all floors' security table but 'floor' security table
   function showSecurityTable(building, floor){
     //hide all floors' security table
