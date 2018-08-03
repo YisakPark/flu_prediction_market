@@ -34,10 +34,13 @@ class Order < ApplicationRecord
   private
     def get_cost
       cost = 0
+			order_info = {}
       if(self.order_type == "buy")
-	cost = MarketMaker.get_cost(self.date_market, self.security_group_ids, self.quantity)
+				order_info[self.security_group_id.to_s.to_sym] = self.quantity
+				cost = MarketMaker.get_cost(order_info)
       elsif(self.order_type == "sell")
-	cost = MarketMaker.get_cost(self.date_market, self.security_group_ids, -self.quantity)
+				order_info[self.security_group_id.to_s.to_sym] = -self.quantity
+				cost = MarketMaker.get_cost(order_info)
       end
       update_columns(cost: cost)
     end   
@@ -50,19 +53,22 @@ class Order < ApplicationRecord
       #update user's money and security_group's share quantity which has been sold so far
       User.transaction do
         SecurityGroup.transaction do
-          User.find(self.user_id).update_attributes(money: user_current_money - self.cost)
-	  self.security_group_ids.each do |i|
-	    current_security_group_shares = SecurityGroup.find(i).shares
-            LineShare.create!( 
-	      user_id: self.user_id, 
-	      flu_population_rate: self.flu_population_rate, 
-	      building_num: SecurityGroup.find(i).building_num,
-	      quantity: self.quantity,
-	      date_market: self.date_market,
-	      security_group_id: i)
-	    SecurityGroup.find(i).update_attributes(
+          User.find(self.user_id).update_attributes(
+							money: user_current_money - self.cost)
+
+          LineShare.create!( 
+	     		  user_id: self.user_id, 
+	      		flu_population_rate: self.flu_population_rate, 
+	      		building_num: SecurityGroup.find(self.security_group_id).building_num,
+			      quantity: self.quantity,
+	 		      date_market: self.date_market,
+	    		  security_group_id: self.security_group_id)
+
+	    		current_security_group_shares = 
+							SecurityGroup.find(self.security_group_id).shares
+
+			    SecurityGroup.find(self.security_group_id).update_attributes(
               shares: self.quantity + current_security_group_shares)
-	  end
         end
       end
     end

@@ -1,38 +1,52 @@
 class MarketMaker < ApplicationRecord
 
   #get cost to buy(or sell) the share of security with the amount of passed quantity. quantity will be positive if buy and negative if sell.
-  #'date_market' is the date of market, 'security_group_ids' is the array of security_group_id, 'quanaitiy' is the quantity of shares to be bought
-  def self.get_cost(security_group_ids, quantity)
-    date_market = MarketMaker.get_date_market security_group_ids.first
-    prior_investment_amount = MarketMaker.get_investment_amount(date_market)
-    posterior_investment_amount = MarketMaker.get_investment_amount(date_market, security_group_ids, quantity)
+	#'order info' is the hash, where the key is security group id and the value is
+  # the quantity of the share specified by the security group id.
+  def self.get_cost order_info
+		sort_by_date = {}
+		order_info.each do |security_group_id, quantity|
+			date = get_date_market(security_group_id.to_s.to_i).to_sym
+			if sort_by_date[date].nil?
+				sort_by_date[date] = {}
+			  sort_by_date[date][security_group_id.to_sym] = quantity
+			else 
+				if sort_by_date[date][security_group_id].nil?
+					sort_by_date[date][security_group_id] = quantity
+				else
+					sort_by_date[date][security_group_id] += quantity
+				end
+			end
+		end
+
+		prior_investment_amount = 0
+		posterior_investment_amount = 0
+
+		sort_by_date.each do |date, hash|
+			prior_investment_amount += MarketMaker.get_investment_amount(date.to_s)
+			posterior_investment_amount += MarketMaker.get_investment_amount(date.to_s, hash)
+		end
+
     return (posterior_investment_amount - prior_investment_amount).abs
   end
 
   #get investment amount to calculate the cost. If there is one parameter, it calculates current investment amount of market specified in the argument, otherwise investment amount with the share quantity of specified security. 'building_nums' is a array of buildings to be bet on
   #if the number of argument is one, it is the date of market
-  #if 3, first: date of market, second: array of 'security_group_ids', third: the numberof share quantity
+  #if 2, first: date of market, second: hash where key is security group id and the value is the number of share quantity
     def self.get_investment_amount(*args)
     value_inside_log = 0
-    updated_quantity_arr = {}
-    building_nums = nil
-    quantity = 0
-    date_market = nil
-
+    updated_quantity_hash = {}
     date_market = args[0]
 
     case args.size
     when 1
-    when 3
-      security_group_ids = args[1]
-      quantity = args[2]
+    when 2
+			updated_quantity_hash = args[1]
       #make hash whose key is security_group_id and value is updated number of shares
-      security_group_ids.each do |security_group_id|
-        key = security_group_id.to_s.to_sym
-	value = SecurityGroup.find(security_group_id).shares + quantity
-	updated_quantity_arr[key] = value
-      end
-
+			updated_quantity_hash.each do |security_group_id, quantity|
+				updated_quantity_hash[security_group_id] += 
+						SecurityGroup.find(security_group_id.to_s).shares
+			end
 
     else
       raise "Invalid number of argument of MarketMaker.get_investment_amount!"
@@ -48,12 +62,13 @@ class MarketMaker < ApplicationRecord
     #calculate investment amount with updated quantity, when args.size != 0
     else
       SecurityGroup.where(date_market: date_market).each do |security_group|
-        if security_group_ids.include?(security_group.id)
-          key = security_group.id.to_s.to_sym
-	  value_inside_log += Math.exp(updated_quantity_arr[key] / MarketMaker.LIQUIDITY_PARAM)
-	else
-	  value_inside_log += Math.exp(security_group.shares / MarketMaker.LIQUIDITY_PARAM)
-	end
+				if updated_quantity_hash[security_group.id.to_s.to_sym].nil?
+					value_inside_log += 
+							Math.exp(security_group.shares / MarketMaker.LIQUIDITY_PARAM)
+				else
+					value_inside_log += 
+							Math.exp(updated_quantity_hash[security_group.id.to_s.to_sym] / MarketMaker.LIQUIDITY_PARAM)
+				end
       end
     end
 
